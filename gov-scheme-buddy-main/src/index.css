@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* SAMVAAD AI - Indian Government Chatbot Design System */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Light theme - Official Government aesthetic */
+    --background: 210 20% 98%;
+    --foreground: 210 40% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 15%;
+
+    /* Deep Navy Blue - Official Government Primary (#0A2540) */
+    --primary: 210 75% 15%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Saffron Orange - Accent (#FF6F00) */
+    --secondary: 30 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 94%;
+    --muted-foreground: 210 15% 45%;
+
+    /* India Green - Success (#138808) */
+    --accent: 120 85% 28%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 210 75% 15%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - Light with government feel */
+    --sidebar-background: 210 30% 96%;
+    --sidebar-foreground: 210 40% 20%;
+    --sidebar-primary: 210 75% 15%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 25% 92%;
+    --sidebar-accent-foreground: 210 40% 15%;
+    --sidebar-border: 210 20% 88%;
+    --sidebar-ring: 210 75% 15%;
+
+    /* Indian tricolor theme */
+    --saffron: 30 100% 50%;
+    --white-band: 0 0% 100%;
+    --green-india: 120 85% 28%;
+    --navy: 210 75% 15%;
+    
+    /* Chat bubbles */
+    --chat-user: 210 75% 15%;
+    --chat-assistant: 210 20% 94%;
+    
+    /* Glassmorphism */
+    --glass-background: 0 0% 100% / 0.7;
+    --glass-border: 0 0% 100% / 0.3;
+  }
+
+  .dark {
+    --background: 210 30% 8%;
+    --foreground: 210 15% 95%;
+
+    --card: 210 30% 12%;
+    --card-foreground: 210 15% 95%;
+
+    --popover: 210 30% 12%;
+    --popover-foreground: 210 15% 95%;
+
+    --primary: 210 60% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 15% 60%;
+
+    --accent: 120 70% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 20%;
+    --input: 210 30% 20%;
+    --ring: 210 60% 50%;
+
+    --sidebar-background: 210 30% 6%;
+    --sidebar-foreground: 210 15% 90%;
+    --sidebar-primary: 210 60% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 30% 15%;
+    --sidebar-accent-foreground: 210 15% 95%;
+    --sidebar-border: 210 30% 18%;
+    --sidebar-ring: 210 60% 50%;
+
+    --saffron: 30 100% 55%;
+    --green-india: 120 70% 45%;
+    --navy: 210 60% 50%;
+    --chat-user: 210 60% 45%;
+    --chat-assistant: 210 30% 15%;
+    
+    --glass-background: 210 30% 12% / 0.8;
+    --glass-border: 210 30% 30% / 0.3;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', 'Noto Sans Devanagari', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+  
+  /* Tricolor underline effect */
+  .tricolor-underline {
+    position: relative;
+  }
+  
+  .tricolor-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      hsl(var(--saffron)) 0%,
+      hsl(var(--saffron)) 33%,
+      hsl(var(--white-band)) 33%,
+      hsl(var(--white-band)) 66%,
+      hsl(var(--green-india)) 66%,
+      hsl(var(--green-india)) 100%
+    );
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  
+  .tricolor-underline:hover::after {
+    transform: scaleX(1);
+  }
+  
+  /* Button ripple effect */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .btn-ripple:active::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Glow effect on hover */
+  .glow-hover {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .glow-hover:hover {
+    box-shadow: 0 0 20px hsl(var(--saffron) / 0.4);
+  }
+  
+  /* Floating animation */
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* Government badge style */
+  .gov-badge {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium;
+    background: linear-gradient(135deg, hsl(var(--saffron) / 0.1), hsl(var(--green-india) / 0.1));
+    border: 1px solid hsl(var(--saffron) / 0.3);
+  }
+}
