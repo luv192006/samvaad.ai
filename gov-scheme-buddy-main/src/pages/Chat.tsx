@@ -1,3 +1,4 @@
+import { supabase } from "@/supabase";
 import { useState, useCallback } from "react";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { ChatArea } from "@/components/chat/ChatArea";
@@ -9,6 +10,7 @@ import { streamChat, type Message } from "@/lib/chat-stream";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Chat() {
+
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);

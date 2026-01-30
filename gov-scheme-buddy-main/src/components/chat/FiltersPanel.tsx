@@ -52,7 +52,7 @@ export function FiltersPanel({ onReset }: FiltersPanelProps) {
   const currentLang = LANGUAGE_OPTIONS.find((l) => l.code === language);
 
   return (
-    <div className="w-64 space-y-4 p-4">
+    <div className="h-full p-4 space-y-4 overflow-y-auto">
       {/* Language Selector */}
       <Card className="border-primary/20">
         <CardHeader className="p-3 pb-2">

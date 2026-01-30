@@ -1,5 +1,4 @@
 import { useRef, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessageNew } from "./ChatMessageNew";
 import { ChatInput } from "./ChatInput";
 import { TypingIndicator } from "./TypingIndicator";
@@ -14,66 +13,86 @@ interface ChatAreaNewProps {
   isTyping: boolean;
   onSendMessage: (message: string) => void;
   conversationStep: "welcome" | "age" | "category" | "status" | "chat";
-  onGuidedSelection: (type: "age" | "category" | "status", value: string, displayText: string) => void;
+  onGuidedSelection: (
+    type: "age" | "category" | "status",
+    value: string,
+    displayText: string
+  ) => void;
   onSuggestionAction: (action: string) => void;
 }
 
-export function ChatAreaNew({ 
-  messages, 
-  isLoading, 
-  isTyping, 
-  onSendMessage, 
+export function ChatAreaNew({
+  messages,
+  isLoading,
+  isTyping,
+  onSendMessage,
   conversationStep,
   onGuidedSelection,
-  onSuggestionAction 
+  onSuggestionAction,
 }: ChatAreaNewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
 
-  // Auto-scroll to bottom on new messages
+  /* ---------------- AUTO SCROLL ---------------- */
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isTyping]);
 
+  /* ---------------- MESSAGE RENDER ---------------- */
+
   const renderMessageContent = (message: Message, index: number) => {
-    // Check for guided prompts
     if (message.role === "assistant") {
       if (message.content === "__GUIDED_AGE__") {
         return (
           <div className="space-y-2">
             <ChatMessageNew role="assistant" content={t.selectAgeGroup} />
-            <div className="ml-12">
-              <GuidedButtons 
-                type="age" 
-                onSelect={(value, label) => onGuidedSelection("age", value, label)} 
+            <div className="pl-10">
+              <GuidedButtons
+                type="age"
+                onSelect={(value, label) =>
+                  onGuidedSelection("age", value, label)
+                }
               />
             </div>
           </div>
         );
       }
+
       if (message.content === "__GUIDED_CATEGORY__") {
         return (
           <div className="space-y-2">
-            <ChatMessageNew role="assistant" content={t.selectSchemeCategory} />
-            <div className="ml-12">
-              <GuidedButtons 
-                type="category" 
-                onSelect={(value, label) => onGuidedSelection("category", value, label)} 
+            <ChatMessageNew
+              role="assistant"
+              content={t.selectSchemeCategory}
+            />
+            <div className="pl-10">
+              <GuidedButtons
+                type="category"
+                onSelect={(value, label) =>
+                  onGuidedSelection("category", value, label)
+                }
               />
             </div>
           </div>
         );
       }
+
       if (message.content === "__GUIDED_STATUS__") {
         return (
           <div className="space-y-2">
-            <ChatMessageNew role="assistant" content={t.selectEmploymentStatus} />
-            <div className="ml-12">
-              <GuidedButtons 
-                type="status" 
-                onSelect={(value, label) => onGuidedSelection("status", value, label)} 
+            <ChatMessageNew
+              role="assistant"
+              content={t.selectEmploymentStatus}
+            />
+            <div className="pl-10">
+              <GuidedButtons
+                type="status"
+                onSelect={(value, label) =>
+                  onGuidedSelection("status", value, label)
+                }
               />
             </div>
           </div>
@@ -81,43 +100,52 @@ export function ChatAreaNew({
       }
     }
 
-    return <ChatMessageNew key={index} role={message.role} content={message.content} />;
+    return (
+      <ChatMessageNew
+        key={index}
+        role={message.role}
+        content={message.content}
+      />
+    );
   };
 
-  // Check if we should show suggestions (after scheme results)
-  const showSuggestions = 
-    conversationStep === "chat" && 
-    messages.length > 0 && 
-    !isLoading && 
+  /* ---------------- SUGGESTIONS ---------------- */
+
+  const showSuggestions =
+    conversationStep === "chat" &&
+    messages.length > 0 &&
+    !isLoading &&
     !isTyping &&
     messages[messages.length - 1]?.role === "assistant" &&
     !messages[messages.length - 1]?.content.startsWith("__GUIDED_");
 
+  /* ---------------- UI ---------------- */
+
   return (
-    <div className="flex flex-1 flex-col">
-      <ScrollArea className="flex-1" ref={scrollRef}>
-        <div className="mx-auto max-w-3xl space-y-6 p-6">
+    <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-4xl space-y-6 px-6 py-4 pt-20">
+
           {messages.map((message, index) => (
-            <div key={index}>
-              {renderMessageContent(message, index)}
-            </div>
+            <div key={index}>{renderMessageContent(message, index)}</div>
           ))}
+
           {isTyping && <TypingIndicator />}
-          
+
           {showSuggestions && (
             <SuggestionChips onSuggestionClick={onSuggestionAction} />
           )}
         </div>
-      </ScrollArea>
+      </div>
 
-      <div className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto max-w-3xl p-4">
-          <ChatInput 
-            onSend={onSendMessage} 
-            isLoading={isLoading} 
-            disabled={conversationStep !== "chat" && messages.length > 0}
-          />
-        </div>
+      {/* Chat Input */}
+      <div className="sticky bottom-0 border-t bg-background p-4">
+        <ChatInput
+          onSend={onSendMessage}
+          isLoading={isLoading}
+          disabled={conversationStep !== "chat" && messages.length > 0}
+        />
       </div>
     </div>
   );
